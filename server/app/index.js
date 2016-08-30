@@ -4,7 +4,6 @@ var app = require('express')();
 var path = require('path');
 var session = require('express-session');
 var chalk=require('chalk');
-var bodyParser=require("body-parser");
 var User=require ('../api/users/user.model.js');
 
 app.use(session({
@@ -16,12 +15,6 @@ app.use(function (req, res, next) {
   console.log('session', req.session);
   next();
 });
-
-
-app.use(bodyParser.urlencoded({extended:false}));
-
-app.use(bodyParser.json());
-
 
 app.use(require('./logging.middleware'));
 
@@ -40,25 +33,23 @@ validFrontendRoutes.forEach(function (stateRoute) {
 });
 
 app.post('/login', function(request, response, next){
-	var email=request.body.email;
-	var password=request.body.password;
-	User.findOne({
-		where:
-			request.body
-	})
-	.then(function(object){
-		if (object){
-			request.session.userId=object.id;
-			response.sendStatus(204);
-		}
-		else{
-			response.sendStatus(401)
-		}
-	})
-	.catch(next)
-})
+    var email=request.body.email;
+    var password=request.body.password;
+    User.findOne({
+        where: request.body
+    })
+    .then(function(object){
+        if (object){
+            request.session.userId = object.id;
+            response.status(204).send();
+        }
+        else{
+            response.status(401).send();
+        }
+    })
+    .catch(next)
+});
 
 app.use(require('./error.middleware'));
-
 
 module.exports = app;
