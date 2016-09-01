@@ -2,7 +2,7 @@
   <ul class="list-inline large-font">
     <li>
       <span
-        contenteditable
+        contenteditable="{{ currentUser.id === story.author_id || currentUser.isAdmin }}"
         class="large-font"
         ng-model="story.title"
         ng-model-options="{debounce: 500}">
